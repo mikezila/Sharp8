@@ -8,9 +8,9 @@ namespace Sharp8
 
 		public static void Main (string[] args)
 		{
-			cpu = new CHIP8CPU (new CHIP8MMU ("life.c8"));
+			cpu = new CHIP8CPU (new CHIP8MMU ("INVADERS"));
 
-			Emulate (80);
+			Emulate (200);
 			cpu.CrashDump ();
 		}
 

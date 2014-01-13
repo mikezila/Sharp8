@@ -276,7 +276,7 @@ namespace Sharp8
 			// Fx07 - Load the current value of the delay timer into register[x]
 			if ((opcode & 0xF0FF) == 0xF007) {
 				Console.WriteLine ("Set register x with value of delay timer");
-				register [(opcode & 0x0F00)] = delay_timer;
+				register [(opcode & 0x0F00) >> 8] = delay_timer;
 				program_counter += 2;
 				return;
 			}
