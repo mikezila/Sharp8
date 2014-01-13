@@ -229,7 +229,7 @@ namespace Sharp8
 			}
 
 			// Annn - Load I with value nnn
-			if ((opcode & 0xA000) == 0xA000) {
+			if ((opcode & 0xF000) == 0xA000) {
 				Console.WriteLine ("Found Load I with nnn opcode.");
 				index_pointer = (ushort)(opcode & 0x0FFF);
 				program_counter += 2;
@@ -302,6 +302,14 @@ namespace Sharp8
 			if ((opcode & 0xF0FF) == 0xF018) {
 				Console.WriteLine ("Load delay timer from register x");
 				sound_timer = register [(opcode & 0x0F00) >> 8];
+				program_counter += 2;
+				return;
+			}
+
+			// Fx1E - ADD I, Vx
+			if ((opcode & 0xF0FF) == 0xF01E) {
+				Console.WriteLine ("Add Vx to I");
+				index_pointer += register [((opcode & 0x0F00) >> 8)];
 				program_counter += 2;
 				return;
 			}
