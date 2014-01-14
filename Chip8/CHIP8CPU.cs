@@ -394,7 +394,7 @@ namespace Sharp8
 			}
 
 			// Fx65 - Read registers from memory starting at address I
-			if ((opcode % 0xF0FF) == 0xF065) {
+			if ((opcode & 0xF0FF) == 0xF065) {
 				Console.WriteLine ("Reading registers from memory.");
 				for (int i = 0; i < register.Length; i++) {
 					register [i] = memory.ReadByte (index_pointer + i);
