@@ -14,11 +14,13 @@ namespace Sharp8
 		private CHIP8MMU memory;
 		private Random random;
 		public bool crashed = false;
+		public Bitmap raster;
 
 		public CHIP8CPU (CHIP8MMU memory)
 		{
 			this.memory = memory;
 			this.random = new Random ();
+			raster = new Bitmap (64, 32);
 			Reset ();
 		}
 
@@ -284,8 +286,8 @@ namespace Sharp8
 			// Fx0A - Wait for key press, place value of pressed key into register x
 			if ((opcode & 0xF0FF) == 0xF00A) {
 				Console.WriteLine ("Waiting for button press - NYI, proceeding");
-				Console.WriteLine ("Faking keypress with key 04");
-				register [(opcode & 0x0F00) >> 8] = 0x04;
+				Console.WriteLine ("Faking keypress with key 06");
+				register [(opcode & 0x0F00) >> 8] = 0x06;
 				program_counter += 2;
 				return;
 			}
@@ -451,7 +453,6 @@ namespace Sharp8
 
 		public void UpdateScreen ()
 		{
-			Bitmap raster = new Bitmap (64, 32);
 			int x = 0;
 			int y = 0;
 			for (int i = 0; i < pixels.Length; i++) {
@@ -465,7 +466,6 @@ namespace Sharp8
 					y++;
 				}
 			}
-			raster.Save ("screen.bmp");
 		}
 		// This adds two bytes and returns the result.
 		// It will set the overflow flag and wrap the result around as needed.
