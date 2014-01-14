@@ -422,6 +422,17 @@ namespace Sharp8
 			memory.CrashDump ();
 		}
 
+		public string DumpState ()
+		{
+			string blob = "Registers:\n";
+			for (int i = 0; i < register.Length; i++) {
+				blob += "V" + i.ToString ("D2") + " " + register [i].ToString ("X2") + "   " + "V" + (++i).ToString ("D2") + " " + register [i].ToString ("X2") + "\n";
+			}
+			blob += "PC : " + program_counter.ToString ("X4") + " Indexer : " + index_pointer.ToString ("X4") + "\nTimers : Sound - " + sound_timer.ToString () + " Delay - " + delay_timer.ToString ();
+			blob += "\n";
+			return blob;
+		}
+
 		public void DrawSprite (ushort opcode)
 		{
 			ushort x = register [(opcode & 0x0F00) >> 8];
