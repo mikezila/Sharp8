@@ -8,11 +8,14 @@ namespace Sharp8
 	{
 		private static CHIP8CPU cpu;
 		private bool running = true;
+		// 17 milliseconds between cycles ends up around
+		// 60 cycles a second, which is the speed the counters
+		// decrement at.  This is "normal speed".
 		private int sleep_time = 17;
 
 		public static void Main (string[] args)
 		{
-			cpu = new CHIP8CPU (new CHIP8MMU ("INVADERS"));
+			cpu = new CHIP8CPU (new CHIP8MMU ("MAZE"));
 			Application.Run (new MainClass ());
 
 		}
@@ -26,7 +29,7 @@ namespace Sharp8
 			MinimizeBox = false;
 			CenterToScreen ();
 
-			int buttonWidth = 100;
+			int buttonWidth = 75;
 
 			Button pause = new Button ();
 			pause.Parent = this;
@@ -39,15 +42,22 @@ namespace Sharp8
 			step.Parent = this;
 			step.Text = "Step";
 			step.Width = buttonWidth;
-			step.Location = new Point (110, 202);
+			step.Location = new Point (95, 202);
 			step.Click += StepClicked;
 
 			Button speed = new Button ();
 			speed.Parent = this;
 			speed.Text = "Speed";
 			speed.Width = buttonWidth;
-			speed.Location = new Point (210, 202);
+			speed.Location = new Point (180, 202);
 			speed.Click += SpeedToggle;
+
+			Button reset = new Button ();
+			reset.Parent = this;
+			reset.Text = "Reset";
+			reset.Width = buttonWidth;
+			reset.Location = new Point (265, 202);
+			reset.Click += ResetClicked;
 		}
 
 		protected override void OnPaint (PaintEventArgs e)
@@ -58,6 +68,11 @@ namespace Sharp8
 				Emulate ();
 			}
 			this.Invalidate (true);
+		}
+
+		void ResetClicked (object sender, EventArgs e)
+		{
+			cpu.Reset ();
 		}
 
 		public void PauseClicked (object sender, EventArgs e)

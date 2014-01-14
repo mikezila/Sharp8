@@ -449,6 +449,7 @@ namespace Sharp8
 				pixels [i] = 0;
 			}
 			register [15] = 0;
+			UpdateScreen ();
 		}
 
 		public void UpdateScreen ()
