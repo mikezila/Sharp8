@@ -70,19 +70,25 @@ namespace Sharp8
 			debugger.Height = 200;
 			debugger.Location = new Point (10, 240);
 			debugger.Enabled = false;
+
+			PictureBox screen = new PictureBox ();
+			screen.Parent = this;
+			screen.Location = new Point (0, 0);
+			screen.Width = this.Width;
+			screen.Height = 32 * 6;
+			screen.Image = cpu.raster;
 		}
 
 		protected override void OnPaint (PaintEventArgs e)
 		{
 			base.OnPaint (e);
-			e.Graphics.DrawImage (cpu.raster, 0, 0, 64 * 6, 32 * 6);
+			//e.Graphics.DrawImage (cpu.raster, 0, 0, 64 * 6, 32 * 6);
 			if (running) {
 				Emulate ();
 				UpdateDebugger ();
 
 			}
-			this.Invalidate (true);
-			debugger.Invalidate ();
+			Invalidate (true);
 			System.Threading.Thread.Sleep (sleep_time);
 		}
 
