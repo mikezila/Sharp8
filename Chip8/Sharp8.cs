@@ -79,8 +79,11 @@ namespace Sharp8
 			if (running) {
 				Emulate ();
 				UpdateDebugger ();
+
 			}
-			this.Invalidate (false);
+			this.Invalidate (true);
+			debugger.Invalidate ();
+			System.Threading.Thread.Sleep (sleep_time);
 		}
 
 		void ResetClicked (object sender, EventArgs e)
@@ -123,9 +126,6 @@ namespace Sharp8
 				return;
 			}
 			cpu.RunCycle ();
-			cpu.UpdateScreen ();
-			System.Threading.Thread.Sleep (sleep_time);
-
 		}
 
 		private void UpdateDebugger ()

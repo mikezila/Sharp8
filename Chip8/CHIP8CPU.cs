@@ -15,6 +15,7 @@ namespace Sharp8
 		private Random random;
 		public bool crashed = false;
 		public Bitmap raster;
+		private bool draw_flag = false;
 
 		public CHIP8CPU (CHIP8MMU memory)
 		{
@@ -45,7 +46,8 @@ namespace Sharp8
 		{
 			//TODO Need to poll input at this time
 			Execute (memory.ReadOpcode (program_counter));
-
+			if (draw_flag)
+				UpdateScreen ();
 			// Decrement our timers
 			if (sound_timer > 0)
 				sound_timer--;
@@ -435,6 +437,7 @@ namespace Sharp8
 
 		public void DrawSprite (ushort opcode)
 		{
+			draw_flag = true;
 			ushort x = register [(opcode & 0x0F00) >> 8];
 			ushort y = register [(opcode & 0x00F0) >> 4];
 			ushort height = (ushort)(opcode & 0x000F);
@@ -456,6 +459,7 @@ namespace Sharp8
 
 		public void ClearScreen ()
 		{
+			draw_flag = true;
 			for (int i = 0; i < pixels.Length; i++) {
 				pixels [i] = 0;
 			}
@@ -478,6 +482,7 @@ namespace Sharp8
 					y++;
 				}
 			}
+			draw_flag = false;
 		}
 		// This adds two bytes and returns the result.
 		// It will set the overflow flag and wrap the result around as needed.
