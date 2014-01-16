@@ -27,6 +27,7 @@ namespace Sharp8
 
 		public MainClass ()
 		{
+
 			Text = "Sharp8";
 			Size = new Size (64 * 6, 480);
 			FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -88,7 +89,7 @@ namespace Sharp8
 				UpdateDebugger ();
 
 			}
-			Invalidate (true);
+			base.Invalidate (true);
 			System.Threading.Thread.Sleep (sleep_time);
 		}
 
