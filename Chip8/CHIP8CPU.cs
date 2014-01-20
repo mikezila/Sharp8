@@ -42,6 +42,24 @@ namespace Sharp8
 			ClearScreen ();
 		}
 
+		public void Reset (string rom)
+		{
+			crashed = false;
+			program_counter = 0x200;
+			index_pointer = 0;
+			delay_timer = 0;
+			sound_timer = 0;
+			for (int i = 0; i < register.Length; i++) {
+				register [i] = 0;
+			}
+			for (int i = 0; i < gamepad.Length; i++) {
+				gamepad [i] = false;
+			}
+			memory = new CHIP8MMU (rom);
+			memory.Reset ();
+			ClearScreen ();
+		}
+
 		public void RunCycle ()
 		{
 			//TODO Need to poll input at this time
@@ -449,8 +467,7 @@ namespace Sharp8
 				for (int xline = 0; xline < 8; xline++) {
 					if ((pixel & (0x80 >> xline)) != 0) {
 						if (pixels [(x + xline + ((y + yline) * 64))] == 1)
-							register [15] = 0x01;
-						;                                 
+							register [15] = 0x01;						                                 
 						pixels [x + xline + ((y + yline) * 64)] ^= 1;
 					}
 				}

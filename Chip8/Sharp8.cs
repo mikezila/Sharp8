@@ -7,7 +7,7 @@ namespace Sharp8
 	class MainClass : Form
 	{
 		private static CHIP8CPU cpu;
-		private bool running = true;
+		private bool running = false;
 		// 17 milliseconds between cycles ends up around
 		// 60 cycles a second, which is the speed the counters
 		// decrement at.  This is "normal speed".
@@ -15,16 +15,14 @@ namespace Sharp8
 		private RichTextBox debugger;
 		private Timer shotClock;
 		private Graphics g;
+		private Button pause;
+		private Button step;
+		private TextBox rom;
 
 		public static void Main (string[] args)
 		{
-			if (args.Length != 1) {
-				Console.WriteLine ("Need exactly one argument.\nAnd make it a valid Chip8 ROM.");
-				return;
-			} else {
-				cpu = new CHIP8CPU (new CHIP8MMU (args [0]));
-				Application.Run (new MainClass ());
-			}
+			cpu = new CHIP8CPU (new CHIP8MMU ("MAZE"));
+			Application.Run (new MainClass ());
 		}
 
 		private void Render ()
@@ -52,20 +50,19 @@ namespace Sharp8
 
 			int buttonWidth = 75;
 
-			Button pause = new Button ();
+			pause = new Button ();
 			pause.Parent = this;
 			pause.Text = "Pause";
 			pause.Width = buttonWidth;
 			pause.Location = new Point (10, 202);
 			pause.Click += PauseClicked;
 
-			Button step = new Button ();
+			step = new Button ();
 			step.Parent = this;
 			step.Text = "Step";
 			step.Width = buttonWidth;
 			step.Location = new Point (95, 202);
 			step.Click += StepClicked;
-			step.Enabled = false;
 
 			Button speed = new Button ();
 			speed.Parent = this;
@@ -83,10 +80,22 @@ namespace Sharp8
 
 			debugger = new RichTextBox ();
 			debugger.Parent = this;
-			debugger.Width = this.Width - 30;
+			debugger.Width = this.Width - 200;
 			debugger.Height = 200;
 			debugger.Location = new Point (10, 240);
 			debugger.Enabled = false;
+
+			Label rom_label = new Label ();
+			rom_label.Parent = this;
+			rom_label.Text = "Rom name:";
+			rom_label.Location = new Point (200, 240);
+			rom_label.Height = 12;
+
+			rom = new TextBox ();
+			rom.Parent = this;
+			rom.Width = 100;
+			rom.Location = new Point (200, 260);
+			rom.Text = "MAZE";
 
 			g = this.CreateGraphics ();
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
@@ -96,26 +105,24 @@ namespace Sharp8
 
 		void ResetClicked (object sender, EventArgs e)
 		{
-			cpu.Reset ();
-			debugger.Text = "System Reset.";
-			Invalidate (true);
+			running = false;
+			cpu.Reset (rom.Text);
+			debugger.Text = "System Reset and paused.";
+			Render ();
 		}
 
 		public void PauseClicked (object sender, EventArgs e)
 		{
 			Button button = (Button)sender;
-			if (running)
-				button.Text = "Run";
-			else
-				button.Text = "Pause";
 			running = !running;
 		}
 
 		public void StepClicked (object sender, EventArgs e)
 		{
-			if (!running) {
-				//Emulate ();
+			if (!running && !cpu.crashed) {
+				cpu.RunCycle ();
 				UpdateDebugger ();
+				Render ();
 			}
 		}
 
@@ -131,7 +138,21 @@ namespace Sharp8
 
 		public void Emulate (object sender, EventArgs e)
 		{
+			Emulate ();
+		}
+
+		public void Emulate ()
+		{
+			if (running) {
+				pause.Text = "Pause";
+				step.Enabled = false;
+			} else {
+				pause.Text = "Run";
+				step.Enabled = true;
+			}
+
 			if (cpu.crashed) {
+				debugger.Text = "Sharp8 has crashed.  Damn.";
 				cpu.CrashDump ();
 				return;
 			}
