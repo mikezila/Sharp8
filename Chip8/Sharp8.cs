@@ -13,6 +13,7 @@ namespace Sharp8
 		// decrement at.  This is "normal speed".
 		private int sleep_time = 17;
 		RichTextBox debugger;
+		Timer shotClock;
 
 		public static void Main (string[] args)
 		{
@@ -27,6 +28,10 @@ namespace Sharp8
 
 		public MainClass ()
 		{
+			shotClock = new Timer ();
+			shotClock.Interval = sleep_time;
+			shotClock.Tick += Emulate;
+			shotClock.Start ();
 
 			Text = "Sharp8";
 			Size = new Size (64 * 6, 480);
@@ -50,6 +55,7 @@ namespace Sharp8
 			step.Width = buttonWidth;
 			step.Location = new Point (95, 202);
 			step.Click += StepClicked;
+			step.Enabled = false;
 
 			Button speed = new Button ();
 			speed.Parent = this;
@@ -71,32 +77,20 @@ namespace Sharp8
 			debugger.Height = 200;
 			debugger.Location = new Point (10, 240);
 			debugger.Enabled = false;
-
-			PictureBox screen = new PictureBox ();
-			screen.Parent = this;
-			screen.Location = new Point (0, 0);
-			screen.Width = this.Width;
-			screen.Height = 32 * 6;
-			screen.Image = cpu.raster;
+		
 		}
 
 		protected override void OnPaint (PaintEventArgs e)
 		{
 			base.OnPaint (e);
-			//e.Graphics.DrawImage (cpu.raster, 0, 0, 64 * 6, 32 * 6);
-			if (running) {
-				Emulate ();
-				UpdateDebugger ();
-
-			}
-			base.Invalidate (true);
-			System.Threading.Thread.Sleep (sleep_time);
+			e.Graphics.DrawImage (cpu.raster, 0, 0, 64 * 6, 32 * 6);
 		}
 
 		void ResetClicked (object sender, EventArgs e)
 		{
 			cpu.Reset ();
-			debugger.Text = "";
+			debugger.Text = "System Reset.";
+			Invalidate (true);
 		}
 
 		public void PauseClicked (object sender, EventArgs e)
@@ -112,7 +106,7 @@ namespace Sharp8
 		public void StepClicked (object sender, EventArgs e)
 		{
 			if (!running) {
-				Emulate ();
+				//Emulate ();
 				UpdateDebugger ();
 			}
 		}
@@ -124,21 +118,26 @@ namespace Sharp8
 			} else {
 				sleep_time = 17;
 			}
+			shotClock.Interval = sleep_time;
 		}
+	
 
-		public void Emulate ()
+		public void Emulate (object sender, EventArgs e)
 		{
 			if (cpu.crashed) {
 				cpu.CrashDump ();
 				return;
 			}
-			cpu.RunCycle ();
+			if (running) {
+				cpu.RunCycle ();
+				UpdateDebugger ();
+				Invalidate (true);
+			}
 		}
 
 		private void UpdateDebugger ()
 		{
 			debugger.Text = cpu.DumpState ();
-			debugger.Invalidate ();
 		}
 	}
 }

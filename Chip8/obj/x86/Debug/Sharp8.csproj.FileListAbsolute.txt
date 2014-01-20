@@ -1,0 +1,5 @@
+C:\Users\matt\Documents\GitHub\Sharp8\Chip8\bin\Debug\Chip8.exe
+C:\Users\matt\Documents\GitHub\Sharp8\Chip8\bin\Debug\Chip8.pdb
+C:\Users\matt\Documents\GitHub\Sharp8\Chip8\obj\x86\Debug\Sharp8.csprojResolveAssemblyReference.cache
+C:\Users\matt\Documents\GitHub\Sharp8\Chip8\obj\x86\Debug\Chip8.exe
+C:\Users\matt\Documents\GitHub\Sharp8\Chip8\obj\x86\Debug\Chip8.pdb
