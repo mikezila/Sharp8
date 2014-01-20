@@ -273,7 +273,7 @@ namespace Sharp8
 			// ExA1 - Skip next if key with value register[x] is not pressed
 			if ((opcode & 0xF0FF) == 0xE0A1) {
 				Console.WriteLine ("Found key not pressed check opcode - NYI");
-				program_counter += 2;
+				program_counter += 4;
 				return;
 			}
 
@@ -289,7 +289,7 @@ namespace Sharp8
 			if ((opcode & 0xF0FF) == 0xF00A) {
 				Console.WriteLine ("Waiting for button press - NYI, proceeding");
 				Console.WriteLine ("Faking keypress with key 06");
-				register [(opcode & 0x0F00) >> 8] = 0x06;
+				register [(opcode & 0x0F00) >> 8] = 0x00;
 				program_counter += 2;
 				return;
 			}
