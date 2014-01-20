@@ -12,8 +12,9 @@ namespace Sharp8
 		// 60 cycles a second, which is the speed the counters
 		// decrement at.  This is "normal speed".
 		private int sleep_time = 17;
-		RichTextBox debugger;
-		Timer shotClock;
+		private RichTextBox debugger;
+		private Timer shotClock;
+		private Graphics g;
 
 		public static void Main (string[] args)
 		{
@@ -26,15 +27,24 @@ namespace Sharp8
 			}
 		}
 
+		private void Render ()
+		{
+
+			g.DrawImage (cpu.raster, 0, 0, 64 * 6, 32 * 6);
+
+		}
+
 		public MainClass ()
 		{
+
+
 			shotClock = new Timer ();
 			shotClock.Interval = sleep_time;
 			shotClock.Tick += Emulate;
 			shotClock.Start ();
 
 			Text = "Sharp8";
-			Size = new Size (64 * 6, 480);
+			Size = new Size (384, 480);
 			FormBorderStyle = FormBorderStyle.FixedSingle;
 			MaximizeBox = false;
 			MinimizeBox = false;
@@ -77,13 +87,11 @@ namespace Sharp8
 			debugger.Height = 200;
 			debugger.Location = new Point (10, 240);
 			debugger.Enabled = false;
-		
-		}
 
-		protected override void OnPaint (PaintEventArgs e)
-		{
-			base.OnPaint (e);
-			e.Graphics.DrawImage (cpu.raster, 0, 0, 64 * 6, 32 * 6);
+			g = this.CreateGraphics ();
+			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+			this.DoubleBuffered = true;
 		}
 
 		void ResetClicked (object sender, EventArgs e)
@@ -120,7 +128,6 @@ namespace Sharp8
 			}
 			shotClock.Interval = sleep_time;
 		}
-	
 
 		public void Emulate (object sender, EventArgs e)
 		{
@@ -131,7 +138,7 @@ namespace Sharp8
 			if (running) {
 				cpu.RunCycle ();
 				UpdateDebugger ();
-				Invalidate (true);
+				Render ();
 			}
 		}
 
