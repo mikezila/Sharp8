@@ -460,6 +460,13 @@ namespace Sharp8
 			ushort y = register [(opcode & 0x00F0) >> 4];
 			ushort height = (ushort)(opcode & 0x000F);
 			ushort pixel;
+
+			//hack to bomb out of crashy rendering
+			if (x > 60 || y > (32 - height)) {
+				Console.WriteLine ("WARNING : Aborted buggy drawing. There will be missing sprites.");
+				return;
+			}
+
 			register [15] = 0x00;
 
 			for (int yline = 0; yline < height; yline++) {
