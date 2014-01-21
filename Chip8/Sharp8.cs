@@ -28,7 +28,7 @@ namespace Sharp8
 		private void Render ()
 		{
 
-			g.DrawImage (cpu.raster, 0, 0, 64 * 6, 32 * 6);
+			g.DrawImage (cpu.raster, 0, 0, 384, 192);
 
 		}
 
@@ -42,7 +42,7 @@ namespace Sharp8
 			shotClock.Start ();
 
 			Text = "Sharp8";
-			Size = new Size (384, 480);
+			Size = new Size (390, 480);
 			FormBorderStyle = FormBorderStyle.FixedSingle;
 			MaximizeBox = false;
 			MinimizeBox = false;
@@ -80,7 +80,7 @@ namespace Sharp8
 
 			debugger = new RichTextBox ();
 			debugger.Parent = this;
-			debugger.Width = this.Width - 200;
+			debugger.Width = 150;
 			debugger.Height = 200;
 			debugger.Location = new Point (10, 240);
 			debugger.Enabled = false;
@@ -100,6 +100,7 @@ namespace Sharp8
 			g = this.CreateGraphics ();
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
 			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+			g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 			this.DoubleBuffered = true;
 		}
 
@@ -113,7 +114,6 @@ namespace Sharp8
 
 		public void PauseClicked (object sender, EventArgs e)
 		{
-			Button button = (Button)sender;
 			running = !running;
 		}
 
