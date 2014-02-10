@@ -1,8 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Chip8\Sharp8.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="c:\Users\matt\Documents\GitHub\Sharp8\Chip8\CHIP8CPU.cs">
     <Files>
-      <File FileName="Chip8\Sharp8.cs" Line="115" Column="4" />
+      <File FileName="Chip8\Sharp8.cs" Line="155" Column="79" />
       <File FileName="c:\Users\matt\Documents\GitHub\Sharp8\Chip8\CHIP8CPU.cs" Line="8" Column="43" />
     </Files>
   </MonoDevelop.Ide.Workbench>

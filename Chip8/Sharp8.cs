@@ -108,7 +108,7 @@ namespace Sharp8
 		{
 			running = false;
 			cpu.Reset (rom.Text);
-			debugger.Text = "System Reset and paused.";
+			debugger.Text = "System reset and paused.\nClick run to begin emulation.";
 			Render ();
 		}
 
@@ -152,7 +152,7 @@ namespace Sharp8
 			}
 
 			if (cpu.crashed) {
-				debugger.Text = "Sharp8 has crashed.  Damn.";
+				debugger.Text = "Sharp8 has crashed.  Damn.\nAn invalid opcode was likely encountered.";
 				cpu.CrashDump ();
 				return;
 			}
