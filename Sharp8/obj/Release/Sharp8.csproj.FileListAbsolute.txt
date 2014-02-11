@@ -1,0 +1,10 @@
+C:\Users\matt\documents\visual studio 2013\Projects\Sharp8\Sharp8\bin\Release\Sharp8.exe.config
+C:\Users\matt\documents\visual studio 2013\Projects\Sharp8\Sharp8\bin\Release\Sharp8.exe
+C:\Users\matt\documents\visual studio 2013\Projects\Sharp8\Sharp8\bin\Release\Sharp8.pdb
+C:\Users\matt\documents\visual studio 2013\Projects\Sharp8\Sharp8\obj\Release\Sharp8.AboutBox.resources
+C:\Users\matt\documents\visual studio 2013\Projects\Sharp8\Sharp8\obj\Release\Sharp8.GameForm.resources
+C:\Users\matt\documents\visual studio 2013\Projects\Sharp8\Sharp8\obj\Release\Sharp8.Properties.Resources.resources
+C:\Users\matt\documents\visual studio 2013\Projects\Sharp8\Sharp8\obj\Release\Sharp8.csproj.GenerateResource.Cache
+C:\Users\matt\documents\visual studio 2013\Projects\Sharp8\Sharp8\obj\Release\Sharp8.exe
+C:\Users\matt\documents\visual studio 2013\Projects\Sharp8\Sharp8\obj\Release\Sharp8.pdb
+C:\Users\matt\documents\visual studio 2013\Projects\Sharp8\Sharp8\obj\Release\Sharp8.csprojResolveAssemblyReference.cache
