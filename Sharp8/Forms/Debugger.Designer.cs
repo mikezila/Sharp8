@@ -48,6 +48,7 @@
             this.Controls.Add(this.debuggerTextBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Debugger";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Debugger";
             this.ResumeLayout(false);
 

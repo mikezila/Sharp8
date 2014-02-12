@@ -23,7 +23,7 @@ namespace Sharp8
             ResizeDisplay(drawScale);
             cpu = new CHIP8CPU();
             Application.Idle += GameLoop;
-            //this.KeyDown += (o, e) => { Console.Write(e. };
+            this.KeyDown += (o, e) => { if (e.KeyCode.Equals(Keys.S)) { StepEmulation(); RenderEmulation(); } };
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -37,13 +37,13 @@ namespace Sharp8
             public System.Drawing.Point p;
         }
 
-        [DllImport("User32.dll", CharSet = CharSet.Auto)]
-        public static extern bool PeekMessage(out PeekMsg msg, IntPtr hWnd, uint messageFilterMin, uint messageFilterMax, uint flags);
+        [DllImport("User32.dll")]
+        public static extern bool PeekMessage(ref PeekMsg msg, IntPtr hWnd, uint messageFilterMin, uint messageFilterMax, uint flags);
 
         private bool IsApplicationIdle()
         {
             PeekMsg result = new PeekMsg();
-            return !PeekMessage(out result, IntPtr.Zero, 0, 0, 0);
+            return !PeekMessage(ref result, IntPtr.Zero, 0, 0, 0);
         }
 
         private void InitGraphics()
