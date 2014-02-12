@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace Sharp8
 {
@@ -11,16 +11,19 @@ namespace Sharp8
         private bool running = false;
 
         private Graphics g;
-        private CHIP8CPU cpu = new CHIP8CPU();
+        private CHIP8CPU cpu;
+        private Debugger debugger;
+        private bool gameLoaded = false;
 
         private int drawScale = 6;
 
         public GameForm()
         {
             InitializeComponent();
-            InitGraphics();
-            ClientSize = new Size(64 * drawScale, (32 * drawScale) + menuStrip1.Height);
+            ResizeDisplay(drawScale);
+            cpu = new CHIP8CPU();
             Application.Idle += GameLoop;
+            //this.KeyDown += (o, e) => { Console.Write(e. };
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -48,6 +51,8 @@ namespace Sharp8
             g = CreateGraphics();
             g.PixelOffsetMode = PixelOffsetMode.Half;
             g.InterpolationMode = InterpolationMode.NearestNeighbor;
+            g.CompositingQuality = CompositingQuality.HighSpeed;
+            g.CompositingMode = CompositingMode.SourceCopy;
         }
 
         private void GameLoop(object sender, EventArgs e)
@@ -55,13 +60,22 @@ namespace Sharp8
             while (IsApplicationIdle())
             {
                 if (running && !cpu.crashed)
+                {
                     StepEmulation();
+                    RenderEmulation();
+                }
             }
         }
 
         private void StepEmulation()
         {
             cpu.RunCycle();
+            if (debugger != null)
+                debugger.debuggerTextBox.Text = cpu.DumpState();
+        }
+
+        private void RenderEmulation()
+        {
             g.DrawImage(cpu.raster, 0, menuStrip1.Height, 64 * drawScale, 32 * drawScale);
         }
 
@@ -69,6 +83,7 @@ namespace Sharp8
         {
             drawScale = scale;
             ClientSize = new Size(64 * drawScale, (32 * drawScale) + menuStrip1.Height);
+            InitGraphics();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -86,13 +101,15 @@ namespace Sharp8
             OpenFileDialog romSelection = new OpenFileDialog();
             romSelection.Multiselect = false;
 
-            if(romSelection.ShowDialog() == DialogResult.OK)
+            if (romSelection.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
                     cpu.LoadRom(romSelection.FileName.ToString());
                     resetEmulatorMenuItem.Enabled = true;
+                    closeRomMenuItem.Enabled = true;
                     running = true;
+                    gameLoaded = true;
                 }
                 catch (Exception ex)
                 {
@@ -104,8 +121,13 @@ namespace Sharp8
         private void closeRomMenuItem_Click(object sender, EventArgs e)
         {
             running = false;
+            closeRomMenuItem.Enabled = false;
             resetEmulatorMenuItem.Enabled = false;
+            if (debugger != null)
+                debugger.debuggerTextBox.Clear();
+            gameLoaded = false;
             cpu = new CHIP8CPU();
+            RenderEmulation();
         }
 
         private void quadDisplayScaleMenuItem_Click(object sender, EventArgs e)
@@ -126,6 +148,35 @@ namespace Sharp8
         private void resetEmulatorMenuItem_Click(object sender, EventArgs e)
         {
             cpu.Reset();
+        }
+
+        private void debuggerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            debugger = new Debugger();
+            debugger.Show();
+        }
+
+        private void pauseMenuItem_Click(object sender, EventArgs e)
+        {
+            if (gameLoaded)
+            {
+                (sender as ToolStripMenuItem).Checked = running;
+                running = !running; 
+            }
+        }
+
+        private void stepMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!running && gameLoaded)
+            {
+                StepEmulation();
+                RenderEmulation(); 
+            }
+        }
+
+        private void x10SizeMenuItem_Click(object sender, EventArgs e)
+        {
+            ResizeDisplay(10);
         }
     }
 }

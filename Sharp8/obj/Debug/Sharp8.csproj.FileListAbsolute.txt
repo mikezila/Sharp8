@@ -7,3 +7,14 @@ C:\Users\matt\documents\visual studio 2013\Projects\Sharp8\Sharp8\obj\Debug\Shar
 C:\Users\matt\documents\visual studio 2013\Projects\Sharp8\Sharp8\obj\Debug\Sharp8.csproj.GenerateResource.Cache
 C:\Users\matt\documents\visual studio 2013\Projects\Sharp8\Sharp8\obj\Debug\Sharp8.exe
 C:\Users\matt\documents\visual studio 2013\Projects\Sharp8\Sharp8\obj\Debug\Sharp8.pdb
+C:\Users\matt\Documents\GitHub\Sharp8\Sharp8\bin\Debug\Sharp8.exe.config
+C:\Users\matt\Documents\GitHub\Sharp8\Sharp8\bin\Debug\Sharp8.exe
+C:\Users\matt\Documents\GitHub\Sharp8\Sharp8\bin\Debug\Sharp8.pdb
+C:\Users\matt\Documents\GitHub\Sharp8\Sharp8\obj\Debug\Sharp8.AboutBox.resources
+C:\Users\matt\Documents\GitHub\Sharp8\Sharp8\obj\Debug\Sharp8.GameForm.resources
+C:\Users\matt\Documents\GitHub\Sharp8\Sharp8\obj\Debug\Sharp8.Properties.Resources.resources
+C:\Users\matt\Documents\GitHub\Sharp8\Sharp8\obj\Debug\Sharp8.csproj.GenerateResource.Cache
+C:\Users\matt\Documents\GitHub\Sharp8\Sharp8\obj\Debug\Sharp8.exe
+C:\Users\matt\Documents\GitHub\Sharp8\Sharp8\obj\Debug\Sharp8.pdb
+C:\Users\matt\Documents\GitHub\Sharp8\Sharp8\obj\Debug\Sharp8.Debugger.resources
+C:\Users\matt\Documents\GitHub\Sharp8\Sharp8\obj\Debug\Sharp8.csprojResolveAssemblyReference.cache
