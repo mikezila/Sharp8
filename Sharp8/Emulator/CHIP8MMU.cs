@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace Sharp8
 {
@@ -7,11 +8,12 @@ namespace Sharp8
 	{
 		private BinaryReader rom;
 		private byte[] memory;
-		private ushort[] stack;
+        private Stack<ushort> stack;
 		public int stack_pointer;
 		private string rom_path;
 		// This is the offset at which the rom is loaded, added to the index during rom reading.
 		private int padding = 0x0200;
+        const int STACK_DEPTH = 16;
 
 		public CHIP8MMU (string rom_path)
 		{
@@ -22,8 +24,9 @@ namespace Sharp8
 		public void Reset ()
 		{
 			memory = new byte[4096]; // Total memory, includes rom/ram/video/everything.
-			stack = new ushort[16]; // For jump functions, the Chip8 didn't have a stack per-se, so it's on us to make one.
-			stack_pointer = 0;
+			//stack = new ushort[16]; // For jump functions, the Chip8 didn't have a stack per-se, so it's on us to make one.
+            stack = new Stack<ushort>();
+            stack_pointer = 0;
 			rom = new BinaryReader (File.OpenRead (rom_path));
 			for (int i = 0; i < rom.BaseStream.Length; i++) {
 				memory [padding + i] = rom.ReadByte ();
@@ -65,22 +68,18 @@ namespace Sharp8
 
 		public ushort PopStack ()
 		{
-			if (stack_pointer == 0)
-				Console.WriteLine ("ERROR : Stack pointer is out of bounds. (Low)");
-			return stack [--stack_pointer];
+            return stack.Pop();
 		}
 
 		public void PushStack (ushort value)
 		{
-			stack [stack_pointer++] = value;
-			if (stack_pointer > 15)
-				Console.WriteLine ("ERROR : Stack Pointer is out of bounds. (High)");
+            stack.Push(value);
 		}
 
 		public ushort ReadOpcode (int address)
 		{
 			ushort value = (ushort)(ReadByte (address++) << 8);
-			value += ReadByte (address);
+			value |= ReadByte (address);
 			return (ushort)value;
 		}
 
@@ -104,8 +103,8 @@ namespace Sharp8
 				Console.WriteLine (i.ToString ("X3") + ": " + memory [i].ToString ("X2") + " " + memory [i + 1].ToString ("X2") + " " + memory [i + 2].ToString ("X2") + " " + memory [i + 3].ToString ("X2"));
 			}
 			Console.WriteLine ("\nStack Dump:");
-			for (int i = 0; i < stack.Length; i++) {
-				Console.WriteLine (i.ToString () + " : " + stack [i].ToString ("X3"));
+			for (int i = 0; i <= stack.Count; i++) {
+				Console.WriteLine (i.ToString () + " : " + stack.Pop().ToString ("X3"));
 			}
 		}
 	}

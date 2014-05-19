@@ -54,10 +54,10 @@ namespace Sharp8
             //TODO Need to poll input at this time
             Execute(memory.ReadOpcode(program_counter));
             if (draw_flag)
-                UpdateScreen();
-            // Decrement our timers
-            if (sound_timer > 0)
-                sound_timer--;
+                //UpdateScreen();
+                // Decrement our timers
+                if (sound_timer > 0)
+                    sound_timer--;
             if (delay_timer > 0)
                 delay_timer--;
         }
@@ -367,7 +367,7 @@ namespace Sharp8
             // Fx29 - Set I to memory location for sprite for hex digit x
             if ((opcode & 0xF0FF) == 0xF029)
             {
-                Console.WriteLine ("Setting I to location of requested digit");
+                Console.WriteLine("Setting I to location of requested digit");
                 index_pointer = 0x0050;
 
                 switch (register[(opcode & 0x0F00) >> 8])
@@ -491,33 +491,47 @@ namespace Sharp8
             return blob;
         }
 
+        private bool IsBitSet(byte b, int pos)
+        {
+            return (b & (1 << pos)) != 0;
+        }
+
         public void DrawSprite(ushort opcode)
         {
             draw_flag = true;
             ushort x = register[(opcode & 0x0F00) >> 8];
             ushort y = register[(opcode & 0x00F0) >> 4];
             ushort height = (ushort)(opcode & 0x000F);
-            ushort pixel;
 
-            //hack to bomb out of crashy rendering
-            if (x > 60 || y > (32 - height))
-            {
-                Console.WriteLine("WARNING : Aborted buggy drawing. There will be missing sprites.");
-                return;
-            }
-
+            // Reset hit detection register
             register[15] = 0x00;
 
-            for (int yline = 0; yline < height; yline++)
+            for (int i = 0; i < height; i++)
             {
-                pixel = memory.ReadByte(index_pointer + yline);
-                for (int xline = 0; xline < 8; xline++)
+                byte spriteLine = memory.ReadByte(index_pointer + i);
+                for (int j = 0; j < 8; j++)
                 {
-                    if ((pixel & (0x80 >> xline)) != 0)
+                    int drawX, drawY;
+                    if (x + j > raster.Width - 1)
+                        drawX = ((x + j) - (raster.Width));
+                    else
+                        drawX = x + j;
+
+                    if (y + i > raster.Height - 1)
+                        drawY = ((y + i) - (raster.Height));
+                    else
+                        drawY = y + i;
+
+                    if (IsBitSet(spriteLine, 7 - j))
                     {
-                        if (pixels[(x + xline + ((y + yline) * 64))] == 1)
+                        if (raster.GetPixel(drawX, drawY) == Color.White)
+                        {
+                            raster.SetPixel(drawX, drawY, Color.Black);
                             register[15] = 0x01;
-                        pixels[x + xline + ((y + yline) * 64)] ^= 1;
+                        }
+                        else
+                            raster.SetPixel(drawX, drawY, Color.White);
+
                     }
                 }
             }
@@ -556,12 +570,13 @@ namespace Sharp8
         // This adds two bytes and returns the result.
         // It will set the overflow flag and wrap the result around as needed.
         // Setting the carry flag can be stopped by supplying "false" to "setCarry".
-        private byte AddBytes(byte byte_one, byte byte_two)
+        private byte AddBytes(byte byte_one, byte byte_two, bool setCarry = true)
         {
             int value = (byte_one + byte_two);
             if (value > 0xFF)
             {
-                register[15] = 0x01;
+                if (setCarry)
+                    register[15] = 0x01;
             }
             return (byte)value;
         }
